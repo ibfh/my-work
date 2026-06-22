@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML基础教程 - 小白入门</title>
+</head>
+<body>
+
+    <!-- ========== 1. 标题标签 ========== -->
+    <!-- h1最大，h6最小，浏览器会自动加粗放大 -->
+    <h1>这是一级标题</h1>
+    <h2>这是二级标题</h2>
+    <h3>这是三级标题</h3>
+
+
+    <!-- ========== 2. 段落和换行 ========== -->
+    <!-- p标签是一个段落，段落之间会自动空行 -->
+    <p>这是第一个段落。段落标签会自动在前后加上间距。</p>
+    <p>这是第二个段落。注意它和上一个段落之间的空白。</p>
+    
+    <!-- br是换行，不会产生段落间距，只是另起一行 -->
+    <p>这行文字里<br>有一个换行符，<br>所以分成了三行。</p>
+
+
+    <!-- ========== 3. 文本格式化 ========== -->
+    <!-- 这些标签可以嵌套使用 -->
+    <p>
+        <b>粗体文字</b>、
+        <i>斜体文字</i>、
+        <u>下划线文字</u>、
+        <s>删除线文字</s>
+    </p>
+    <p>
+        <strong>强调重要文字（语义强，外观同粗体）</strong>、
+        <em>强调语气文字（语义强，外观同斜体）</em>
+    </p>
+
+
+    <!-- ========== 4. 水平线 ========== -->
+    <!-- hr是一条横贯页面的分割线，用于分隔内容 -->
+    <hr>
+    <p>上面是一条水平分割线</p>
+    <hr>
+
+
+    <!-- ========== 5. 注释 ========== -->
+    <!-- 你现在看到的这些灰色文字就是注释，浏览器不会显示它们 -->
+    <!-- 注释的写法：<!-- 注释内容 -- >（实际使用时去掉空格） -->
+
+
+    <!-- ========== 6. 列表 ========== -->
+    <!-- ul是无序列表（圆点），ol是有序列表（数字），li是列表项 -->
+    
+    <h3>无序列表</h3>
+    <ul>
+        <li>苹果</li>
+        <li>香蕉</li>
+        <li>橙子</li>
+    </ul>
+
+    <h3>有序列表</h3>
+    <ol>
+        <li>第一步：打开电脑</li>
+        <li>第二步：打开浏览器</li>
+        <li>第三步：学习HTML</li>
+    </ol>
+
+
+    <!-- ========== 7. 表格 ========== -->
+    <!-- table定义表格，tr是行，th是表头单元格，td是普通单元格 -->
+    <!-- border="1"给表格加上边框线，方便看清结构 -->
+    
+    <h3>简单表格</h3>
+    <table border="1">
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>城市</th>
+        </tr>
+        <tr>
+            <td>张三</td>
+            <td>25</td>
+            <td>北京</td>
+        </tr>
+        <tr>
+            <td>李四</td>
+            <td>30</td>
+            <td>上海</td>
+        </tr>
+    </table>
+
+
+    <!-- ========== 8. 表单元素 ========== -->
+    <!-- form定义表单区域，内含各种输入控件 -->
+    <!-- 这些只是展示控件的样子，暂时不处理后端提交 -->
+    
+    <h3>表单控件展示</h3>
+    <form>
+        <!-- 文本输入框 -->
+        <p>文本输入：<input type="text" placeholder="请输入文字"></p>
+        
+        <!-- 密码输入框（输入内容会显示为圆点） -->
+        <p>密码输入：<input type="password" placeholder="请输入密码"></p>
+        
+        <!-- 多行文本框 -->
+        <p>多行文本：<textarea rows="3" cols="30" placeholder="请输入多行文字"></textarea></p>
+        
+        <!-- 单选按钮（同一组name必须相同，只能选一个） -->
+        <p>单选：
+            <input type="radio" name="gender" value="male"> 男
+            <input type="radio" name="gender" value="female"> 女
+        </p>
+        
+        <!-- 复选框（可以多选） -->
+        <p>多选：
+            <input type="checkbox" name="hobby" value="read"> 阅读
+            <input type="checkbox" name="hobby" value="sport"> 运动
+            <input type="checkbox" name="hobby" value="music"> 音乐
+        </p>
+        
+        <!-- 下拉选择框 -->
+        <p>下拉选择：
+            <select>
+                <option>选项一</option>
+                <option>选项二</option>
+                <option>选项三</option>
+            </select>
+        </p>
+        
+        <!-- 按钮 -->
+        <p>
+            <input type="button" value="普通按钮">
+            <input type="submit" value="提交按钮">
+            <input type="reset" value="重置按钮">
+        </p>
+    </form>
+
+
+    <!-- ========== 9. div和span ========== -->
+    <!-- div是块级容器（独占一行），span是行内容器（不独占一行） -->
+    <!-- 它们是网页布局的基础，通常配合CSS使用 -->
+    
+    <h3>div和span的区别</h3>
+    <div style="background-color: lightblue;">
+        这是第一个div，它独占一整行。
+    </div>
+    <div style="background-color: lightgreen;">
+        这是第二个div，它也独占一整行。
+    </div>
+    <p>
+        这是一段文字，其中<span style="color: red; font-weight: bold;">这部分被span包裹</span>，
+        而<span style="background-color: yellow;">这部分也被span包裹</span>，
+        但它们都在同一行内。
+    </p>
+
+
+    <!-- ========== 10. 预格式文本 ========== -->
+    <!-- pre标签会保留你写的空格和换行，适合展示代码或排版文字 -->
+    
+    <h3>pre标签示例</h3>
+    <pre>
+    床前明月光，
+        疑是地上霜。
+    举头望明月，
+        低头思故乡。
+    </pre>
+
+
+</body>
+</html>
