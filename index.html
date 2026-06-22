@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能个人面板 - 点击即可编辑</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            background-color: #f5f6fa;
+            color: #2d3436;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            padding: 28px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+        .header .date {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #6c5ce7;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        /* 任务列表 */
+        .task-list {
+            list-style: none;
+        }
+        .task-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        .task-list li:last-child {
+            border-bottom: none;
+        }
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            accent-color: #6c5ce7;
+            cursor: pointer;
+        }
+        .task-text {
+            cursor: pointer;
+            flex: 1;
+        }
+        .task-done {
+            text-decoration: line-through;
+            color: #b2bec3;
+        }
+        .task-tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .tag-urgent {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+        .tag-normal {
+            background: #dfe6e9;
+            color: #636e72;
+        }
+
+        /* 添加按钮 */
+        .add-btn {
+            margin-top: 12px;
+            padding: 6px 16px;
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .add-btn:hover {
+            background: #5a4bd1;
+        }
+        .delete-btn {
+            margin-left: 8px;
+            background: none;
+            border: none;
+            color: #d63031;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+        }
+        .delete-btn:hover {
+            color: #b71c1c;
+        }
+
+        /* 日常网格 */
+        .routine-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .routine-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .routine-item:hover {
+            background: #eef0f4;
+        }
+        .routine-item .icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+        .routine-item .title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2d3436;
+        }
+        .routine-item .time {
+            font-size: 12px;
+            color: #636e72;
+            margin-top: 4px;
+        }
+
+        /* 便签 */
+        .note {
+            background: #fff9e6;
+            border-left: 4px solid #fdcb6e;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #636e72;
+            cursor: pointer;
+            min-height: 60px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #b2bec3;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+        /* 编辑提示 */
+        .edit-hint {
+            font-size: 11px;
+            color: #b2bec3;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* 编辑状态样式 */
+        [contenteditable="true"]:focus {
+            outline: 2px dashed #6c5ce7;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 头部 -->
+    <div class="header" id="headerTitle">
+        <h1 contenteditable="true">📋 个人面板（点击修改标题）</h1>
+        <p class="date" id="currentDate"></p>
+    </div>
+
+    <!-- 工作任务 -->
+    <div class="card">
+        <h2 contenteditable="true">💼 工作任务</h2>
+        <p class="edit-hint">💡 点击文字直接修改，勾选标记完成，点击标签切换紧急/普通</p>
+        <ul class="task-list" id="taskList">
+            <!-- 任务由JS动态生成 -->
+        </ul>
+        <button class="add-btn" onclick="addTask()">+ 添加新任务</button>
+    </div>
+
+    <!-- 日常事务 -->
+    <div class="card">
+        <h2 contenteditable="true">🏠 日常事务</h2>
+        <p class="edit-hint">💡 点击每个卡片修改内容</p>
+        <div class="routine-grid" id="routineGrid">
+            <!-- 由JS动态生成 -->
+        </div>
+        <button class="add-btn" style="margin-top:12px;" onclick="addRoutine()">+ 添加日常项</button>
+    </div>
+
+    <!-- 备忘便签 -->
+    <div class="card">
+        <h2 contenteditable="true">📝 备忘便签</h2>
+        <p class="edit-hint">💡 点击下方黄色区域直接写内容</p>
+        <div class="note" contenteditable="true" id="noteContent">
+            • 周五之前提交报销单<br>
+            • 下周二牙科复诊，提前确认<br>
+            • 物业费月底到期，记得续缴
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer" contenteditable="true">保持专注 · 保持热爱（点击修改）</div>
+
+    <script>
+        // ========== 自动显示今天日期 ==========
+        function updateDate() {
+            const now = new Date();
+            const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const weekday = weekdays[now.getDay()];
+            document.getElementById('currentDate').textContent = 
+                year + '年' + month + '月' + day + '日 · 星期' + weekday;
+        }
+        updateDate();
+
+        // ========== 数据存储：用localStorage自动保存 ==========
+        function saveData() {
+            const data = {
+                tasks: tasks,
+                routines: routines,
+                note: document.getElementById('noteContent').innerHTML
+            };
+            localStorage.setItem('smartPanelData', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('smartPanelData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                tasks = data.tasks || [];
+                routines = data.routines || [];
+                document.getElementById('noteContent').innerHTML = data.note || '';
+            } else {
+                // 默认数据
+                tasks = [
+                    { text: '完成项目需求文档初稿', done: false, urgent: true },
+                    { text: '回复客户邮件', done: false, urgent: false },
+                    { text: '周会纪要整理', done: true, urgent: false },
+                    { text: '审核团队提交的代码', done: false, urgent: false }
+                ];
+                routines = [
+                    { icon: '🏃', title: '晨跑 30 分钟', time: '6:30 - 7:00' },
+                    { icon: '🛒', title: '超市采购', time: '下班后' },
+                    { icon: '📖', title: '阅读 1 小时', time: '21:00 - 22:00' },
+                    { icon: '🧹', title: '打扫房间', time: '周末' }
+                ];
+            }
+        }
+
+        let tasks = [];
+        let routines = [];
+
+        // ========== 渲染任务列表 ==========
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                
+                // 复选框
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'task-checkbox';
+                checkbox.checked = task.done;
+                checkbox.onchange = function() {
+                    tasks[index].done = this.checked;
+                    renderTasks();
+                    saveData();
+                };
+                
+                // 文字（可编辑）
+                const textSpan = document.createElement('span');
+                textSpan.className = 'task-text' + (task.done ? ' task-done' : '');
+                textSpan.contentEditable = 'true';
+                textSpan.textContent = task.text;
+                textSpan.onblur = function() {
+                    tasks[index].text = this.textContent;
+                    saveData();
+                };
+                
+                // 标签（点击切换）
+                const tag = document.createElement('span');
+                tag.className = 'task-tag ' + (task.urgent ? 'tag-urgent' : 'tag-normal');
+                tag.textContent = task.urgent ? '紧急' : '普通';
+                tag.onclick = function() {
+                    tasks[index].urgent = !tasks[index].urgent;
+                    renderTasks();
+                    saveData();
+                };
+                
+                // 删除按钮
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.textContent = '✕';
+                delBtn.title = '删除此任务';
+                delBtn.onclick = function() {
+                    tasks.splice(index, 1);
+                    renderTasks();
+                    saveData();
+                };
+                
+                li.appendChild(checkbox);
+                li.appendChild(textSpan);
+                li.appendChild(tag);
+                li.appendChild(delBtn);
+                list.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            tasks.push({ text: '新任务（点击修改）', done: false, urgent: false });
+            renderTasks();
+            saveData();
+            // 让新任务获得焦点
+            const lastText = document.querySelector('#taskList li:last-child .task-text');
+            if (lastText) {
+                lastText.focus();
+                // 选中全部文字方便直接改
+                const range = document.createRange();
+                range.selectNodeContents(lastText);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+
+        // ========== 渲染日常事务 ==========
+        function renderRoutines() {
+            const grid = document.getElementById('routineGrid');
+            grid.innerHTML = '';
+            routines.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'routine-item';
+                
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'icon';
+                iconSpan.contentEditable = 'true';
+                iconSpan.textContent = item.icon;
+                iconSpan.onblur = function() {
+                    routines[index].icon = this.textContent || '📌';
+                    saveData();
+                };
+                
+                const titleSpan = document.createElement('div');
+                titleSpan.className = 'title';
+                titleSpan.contentEditable = 'true';
+                titleSpan.textContent = item.title;
+                titleSpan.onblur = function() {
+                    routines[index].title = this.textContent || '新事项';
+                    saveData();
+                };
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.className = 'time';
+                timeSpan.contentEditable = 'true';
+                timeSpan.textContent = item.time;
+                timeSpan.onblur = function() {
+                    routines[index].time = this.textContent || '';
+                    saveData();
+                };
+                
+                const delBtn = document.createElement('button');
+                delBtn.className = 'delete-btn';
+                delBtn.textContent = '✕';
+                delBtn.title = '删除此项';
+                delBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    routines.splice(index, 1);
+                    renderRoutines();
+                    saveData();
+                };
+                
+                div.appendChild(iconSpan);
+                div.appendChild(titleSpan);
+                div.appendChild(timeSpan);
+                div.appendChild(delBtn);
+                grid.appendChild(div);
+            });
+        }
+
+        function addRoutine() {
+            routines.push({ icon: '📌', title: '新事项（点击修改）', time: '时间' });
+            renderRoutines();
+            saveData();
+            const lastTitle = document.querySelector('#routineGrid .routine-item:last-child .title');
+            if (lastTitle) {
+                lastTitle.focus();
+                const range = document.createRange();
+                range.selectNodeContents(lastTitle);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        }
+
+        // ========== 便签自动保存 ==========
+        document.getElementById('noteContent').addEventListener('blur', saveData);
+        // 每10秒自动保存一次（以防忘记点别处）
+        setInterval(saveData, 10000);
+
+        // ========== 初始化 ==========
+        loadData();
+        renderTasks();
+        renderRoutines();
+    </script>
+
+</body>
+</html>
